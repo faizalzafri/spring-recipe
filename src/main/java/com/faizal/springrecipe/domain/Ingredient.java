@@ -14,7 +14,7 @@ import javax.persistence.OneToOne;
 public class Ingredient {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String description;
 	private BigDecimal amount;
@@ -26,12 +26,15 @@ public class Ingredient {
 	private Recipe recipe;
 
 	public Ingredient() {
-		super();
-		// TODO Auto-generated constructor stub
+	}
+
+	public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom) {
+		this.description = description;
+		this.amount = amount;
+		this.uom = uom;
 	}
 
 	public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom, Recipe recipe) {
-		super();
 		this.description = description;
 		this.amount = amount;
 		this.uom = uom;
@@ -62,14 +65,6 @@ public class Ingredient {
 		this.amount = amount;
 	}
 
-	public UnitOfMeasure getUom() {
-		return uom;
-	}
-
-	public void setUom(UnitOfMeasure uom) {
-		this.uom = uom;
-	}
-
 	public Recipe getRecipe() {
 		return recipe;
 	}
@@ -78,4 +73,11 @@ public class Ingredient {
 		this.recipe = recipe;
 	}
 
+	public UnitOfMeasure getUom() {
+		return uom;
+	}
+
+	public void setUom(UnitOfMeasure uom) {
+		this.uom = uom;
+	}
 }

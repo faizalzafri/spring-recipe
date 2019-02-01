@@ -21,8 +21,9 @@ import javax.persistence.OneToOne;
 public class Recipe {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String description;
 	private Integer prepTime;
 	private Integer cookTime;
@@ -33,17 +34,17 @@ public class Recipe {
 	@Lob
 	private String directions;
 
-	@Lob
-	private Byte[] image;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private Notes notes;
-
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
 	private Set<Ingredient> ingredients = new HashSet<>();
 
-	@Enumerated(EnumType.STRING)
+	@Lob
+	private Byte[] image;
+
+	@Enumerated(value = EnumType.STRING)
 	private Difficulty difficulty;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	private Notes notes;
 
 	@ManyToMany
 	@JoinTable(name = "recipe_category", joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
@@ -127,6 +128,13 @@ public class Recipe {
 
 	public void setNotes(Notes notes) {
 		this.notes = notes;
+		notes.setRecipe(this);
+	}
+
+	public Recipe addIngredient(Ingredient ingredient) {
+		ingredient.setRecipe(this);
+		this.ingredients.add(ingredient);
+		return this;
 	}
 
 	public Set<Ingredient> getIngredients() {
@@ -152,5 +160,4 @@ public class Recipe {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
-
 }
