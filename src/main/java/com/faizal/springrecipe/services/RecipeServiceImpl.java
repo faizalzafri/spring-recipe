@@ -24,11 +24,12 @@ public class RecipeServiceImpl implements RecipeService {
 	private final RecipeCommandToRecipe recipeCommandToRecipe;
 	private final RecipeToRecipeCommand recipeToRecipeCommand;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeCommandToRecipe recipeCommandToRecipe, RecipeToRecipeCommand recipeToRecipeCommand) {
-        this.recipeRepository = recipeRepository;
-        this.recipeCommandToRecipe = recipeCommandToRecipe;
+	public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeCommandToRecipe recipeCommandToRecipe,
+			RecipeToRecipeCommand recipeToRecipeCommand) {
+		this.recipeRepository = recipeRepository;
+		this.recipeCommandToRecipe = recipeCommandToRecipe;
 		this.recipeToRecipeCommand = recipeToRecipeCommand;
-    }
+	}
 
 	@Override
 	public Set<Recipe> getRecipes() {
@@ -48,13 +49,21 @@ public class RecipeServiceImpl implements RecipeService {
 		else
 			return null;
 	}
-	@Override
-    @Transactional
-    public RecipeCommand saveRecipeCommand(RecipeCommand command) {
-        Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
 
-        Recipe savedRecipe = recipeRepository.save(detachedRecipe);
-        log.debug("Saved RecipeId:" + savedRecipe.getId());
-        return recipeToRecipeCommand.convert(savedRecipe);
-    }
+	@Override
+	@Transactional
+	public RecipeCommand saveRecipeCommand(RecipeCommand command) {
+		Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
+
+		Recipe savedRecipe = recipeRepository.save(detachedRecipe);
+		log.debug("Saved RecipeId:" + savedRecipe.getId());
+		return recipeToRecipeCommand.convert(savedRecipe);
+	}
+
+	@Override
+	public RecipeCommand getRecipeCommandById(Long id) {
+		// TODO Auto-generated method stub
+		return recipeToRecipeCommand.convert(getRecipeById(id));
+	}
+
 }
