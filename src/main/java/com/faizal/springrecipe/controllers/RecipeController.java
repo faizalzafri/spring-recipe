@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.faizal.springrecipe.domain.Recipe;
-import com.faizal.springrecipe.service.RecipeService;
+import com.faizal.springrecipe.services.RecipeService;
 
 @Controller
 public class RecipeController {

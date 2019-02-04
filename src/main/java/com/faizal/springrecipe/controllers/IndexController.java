@@ -4,9 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.faizal.springrecipe.repositories.CategoryRepository;
-import com.faizal.springrecipe.repositories.UnitOfMeasureRepository;
-import com.faizal.springrecipe.service.RecipeService;
+import com.faizal.springrecipe.services.RecipeService;
 
 @Controller
 public class IndexController {
