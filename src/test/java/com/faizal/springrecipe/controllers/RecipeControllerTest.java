@@ -81,7 +81,7 @@ public class RecipeControllerTest {
 	@Test
 	public void testDelete() throws Exception {
 		mockMvc.perform(get("/recipe/delete/2")).andExpect(status().is3xxRedirection())
-				.andExpect(view().name("redirect:/recipe/"));
+				.andExpect(view().name("redirect:/"));
 	}
 
 }
