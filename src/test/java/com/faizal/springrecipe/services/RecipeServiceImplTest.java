@@ -15,16 +15,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.faizal.springrecipe.converters.RecipeCommandToRecipe;
+import com.faizal.springrecipe.converters.RecipeToRecipeCommand;
 import com.faizal.springrecipe.domain.Recipe;
 import com.faizal.springrecipe.repositories.RecipeRepository;
 
 public class RecipeServiceImplTest {
 
-	RecipeServiceImpl recipeServiceImpl;
+	@Autowired
+	RecipeCommandToRecipe recipeCommandToRecipe;
+	
+	@Autowired
+	RecipeToRecipeCommand recipeToRecipeCommand;
 
 	@Mock
 	RecipeRepository recipeRepository;
+
+	RecipeServiceImpl recipeServiceImpl;
 
 	Recipe recipe;
 
@@ -33,7 +42,7 @@ public class RecipeServiceImplTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		recipeServiceImpl = new RecipeServiceImpl(recipeRepository);
+		recipeServiceImpl = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
 		recipe = new Recipe();
 		recipe.setId(1L);
 		hashSet = new HashSet<>();
