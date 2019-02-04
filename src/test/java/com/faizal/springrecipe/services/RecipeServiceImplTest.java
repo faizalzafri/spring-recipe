@@ -26,7 +26,7 @@ public class RecipeServiceImplTest {
 
 	@Autowired
 	RecipeCommandToRecipe recipeCommandToRecipe;
-	
+
 	@Autowired
 	RecipeToRecipeCommand recipeToRecipeCommand;
 
@@ -50,18 +50,27 @@ public class RecipeServiceImplTest {
 	}
 
 	@Test
-	public void getRecipes() throws Exception {
+	public void testGetRecipes() throws Exception {
 		when(recipeRepository.findAll()).thenReturn(hashSet);
 		assertEquals(recipeServiceImpl.getRecipes().size(), 1);
 		verify(recipeRepository, times(1)).findAll();
 	}
 
 	@Test
-	public void getRecipeById() throws Exception {
+	public void testGetRecipeById() throws Exception {
 		when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
 		assertNotNull(recipeServiceImpl.getRecipeById(1L));
 		verify(recipeRepository, times(1)).findById(anyLong());
 
+	}
+
+	@Test
+	public void testDeleteById() throws Exception {
+		Long id = 1L;
+
+		recipeRepository.deleteById(id);
+
+		verify(recipeRepository).deleteById(anyLong());
 	}
 
 }
