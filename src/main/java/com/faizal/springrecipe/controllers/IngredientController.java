@@ -2,12 +2,16 @@ package com.faizal.springrecipe.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.faizal.springrecipe.commands.IngredientCommand;
 import com.faizal.springrecipe.commands.RecipeCommand;
+import com.faizal.springrecipe.commands.UnitOfMeasureCommand;
+import com.faizal.springrecipe.domain.UnitOfMeasure;
 import com.faizal.springrecipe.services.IngredientService;
 import com.faizal.springrecipe.services.RecipeService;
 import com.faizal.springrecipe.services.UnitOfMeasureService;
@@ -48,6 +52,7 @@ public class IngredientController {
 		return "recipe/ingredient/show";
 	}
 
+	@GetMapping
 	@RequestMapping("/recipe/{recipeId}/ingredient/{ingredientId}/update")
 	public String updateRecipeIngredient(@PathVariable("recipeId") String recipeId,
 			@PathVariable("ingredientId") String ingredientId, Model model) {
@@ -60,11 +65,29 @@ public class IngredientController {
 		return "recipe/ingredient/ingredientform";
 	}
 
+	@PostMapping
 	@RequestMapping("/recipe/{recipeId}/ingredient")
 	public String saveOrUpdate(@ModelAttribute IngredientCommand ingredientCommand) {
 		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(ingredientCommand);
 
 		return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredient/" + savedCommand.getId() + "/show";
+	}
+
+	@GetMapping
+	@RequestMapping("/recipe/{id}/ingredient/new")
+	public String addNewRecipeIngredient(@PathVariable("id") String recipeId, Model model) {
+
+		RecipeCommand recipeCommand = recipeService.getRecipeCommandById(new Long(recipeId));
+
+		IngredientCommand ingredientCommand = new IngredientCommand();
+		ingredientCommand.setRecipeId(new Long(recipeId));
+		ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
+
+		model.addAttribute("ingredient", ingredientCommand);
+
+		model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+
+		return "recipe/ingredient/ingredientform";
 	}
 
 }

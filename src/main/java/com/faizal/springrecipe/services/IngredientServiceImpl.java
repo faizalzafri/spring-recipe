@@ -72,16 +72,32 @@ public class IngredientServiceImpl implements IngredientService {
 				Ingredient foundIngredient = ingredientOptional.get();
 				foundIngredient.setDescription(ingredientCommand.getDescription());
 				foundIngredient.setAmount(ingredientCommand.getAmount());
-				foundIngredient.setUom(unitOfMeasureRepository.findById(ingredientCommand.getUnitOfMeasure().getId())
-						.orElseThrow(() -> new RuntimeException("No UOM")));
+				foundIngredient.setUom(unitOfMeasureRepository
+										.findById(ingredientCommand.getUnitOfMeasure().getId())
+										.orElseThrow(() -> new RuntimeException("No UOM"))
+										);
 
 			} else {
-				recipe.addIngredient(ingredientCommandToIngredient.convert(ingredientCommand));
+				 Ingredient ingredient = ingredientCommandToIngredient.convert(ingredientCommand);
+				 ingredient.setRecipe(recipe);
+				 recipe.addIngredient(ingredient);
+				
 			}
 
 			Recipe savedRecipe = recipeRepository.save(recipe);
-			return irCommand.convert(savedRecipe.getIngredients().stream()
-					.filter(ing -> ing.getId().equals(ingredientCommand.getId())).findFirst().get());
+			
+			Optional<Ingredient> savedIngredientOptional = savedRecipe.getIngredients().stream()
+					.filter(ing -> ing.getId().equals(ingredientCommand.getId())).findFirst();
+			
+			if(!savedIngredientOptional.isPresent()) {
+				savedIngredientOptional = savedRecipe.getIngredients().stream()
+						.filter(ing -> ing.getDescription().equals(ingredientCommand.getDescription()))
+						.filter(ing -> ing.getAmount().equals(ingredientCommand.getAmount()))
+						.filter(ing -> ing.getUom().getId().equals(ingredientCommand.getUnitOfMeasure().getId()))
+						.findFirst();
+			}
+			
+			return irCommand.convert(savedIngredientOptional.get());
 		}
 	}
 
