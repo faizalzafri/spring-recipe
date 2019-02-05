@@ -17,14 +17,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.faizal.springrecipe.commands.IngredientCommand;
 import com.faizal.springrecipe.commands.RecipeCommand;
 import com.faizal.springrecipe.domain.Recipe;
+import com.faizal.springrecipe.services.IngredientService;
 import com.faizal.springrecipe.services.RecipeService;
 
 public class IngredientControllerTest {
 
 	@Mock
 	RecipeService recipeService;
+	
+	@Mock
+	IngredientService ingredientService;
 
 	IngredientController controller;
 
@@ -33,12 +38,12 @@ public class IngredientControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		controller = new IngredientController(recipeService);
+		controller = new IngredientController(recipeService, ingredientService);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 	}
 
 	@Test
-	public void testShowIngredient() throws Exception {
+	public void testListIngredient() throws Exception {
 		RecipeCommand recipeCommand = new RecipeCommand();
 
 		when(recipeService.getRecipeCommandById(anyLong())).thenReturn(recipeCommand);
@@ -49,12 +54,19 @@ public class IngredientControllerTest {
 				.andExpect(model().attributeExists("recipe"));
 	}
 
-	/*@Test
-	public void testGetNewRecipe() throws Exception {
-		mockMvc.perform(get("/recipe/new")).andExpect(status().isOk()).andExpect(view().name("recipe/recipeform"))
-				.andExpect(model().attributeExists("recipe"));
-	}
+	@Test
+	public void testShowIngredient() throws Exception {
+		
+		IngredientCommand ingredientCommand = new IngredientCommand();
+		
 
+		when(ingredientService.getByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientCommand);
+		mockMvc.perform(get("/recipe/1/ingredient/1/show"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("recipe/ingredient/show"))
+				.andExpect(model().attributeExists("ingredient"));
+	}
+	/*@Test
 	@Test
 	public void testPostNewRecipe() throws Exception {
 		RecipeCommand recipeCommand = new RecipeCommand();
