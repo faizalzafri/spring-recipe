@@ -45,7 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
 		if (optRec.isPresent())
 			return optRec.get();
 		else
-			throw new NotFoundException("Recipe Not Found");
+			throw new NotFoundException("Recipe Not Found. For id value :" + id);
 	}
 
 	@Override
