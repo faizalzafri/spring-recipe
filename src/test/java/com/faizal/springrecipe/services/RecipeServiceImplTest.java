@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.faizal.springrecipe.converters.RecipeCommandToRecipe;
 import com.faizal.springrecipe.converters.RecipeToRecipeCommand;
 import com.faizal.springrecipe.domain.Recipe;
+import com.faizal.springrecipe.exceptions.NotFoundException;
 import com.faizal.springrecipe.repositories.RecipeRepository;
 
 public class RecipeServiceImplTest {
@@ -71,6 +72,15 @@ public class RecipeServiceImplTest {
 		recipeRepository.deleteById(id);
 
 		verify(recipeRepository).deleteById(anyLong());
+	}
+
+	@Test(expected = NotFoundException.class)
+	public void testGetRecipeNotFound() throws Exception {
+		Optional<Recipe> recipe = Optional.empty();
+
+		when(recipeRepository.findById(anyLong())).thenReturn(recipe);
+
+		Recipe returnedRecipe = recipeServiceImpl.getRecipeById(1L);
 	}
 
 }
