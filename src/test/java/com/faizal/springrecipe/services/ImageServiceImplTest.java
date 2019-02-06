@@ -1,42 +1,56 @@
 package com.faizal.springrecipe.services;
 
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.faizal.springrecipe.controllers.ImageController;
+import com.faizal.springrecipe.domain.Recipe;
+import com.faizal.springrecipe.repositories.RecipeRepository;
 
-public class ImageServiceImplTest {/*
+public class ImageServiceImplTest {
 
 	@Mock
+	RecipeRepository recipeRepository;
+
 	ImageService imageService;
-
-	ImageController imageController;
-
-	MockMvc mockMvc;
 
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		imageController = new ImageController(imageService);
-		mockMvc = MockMvcBuilders.standaloneSetup(imageController).build();
+		imageService = new ImageServiceImpl(recipeRepository);
+
 	}
 
 	@Test
 	public void testHandleImagePost() throws Exception {
-		MockMultipartFile multipartFile = new MockMultipartFile("file", "texting.txt", "text/plain", "testFile2".getBytes());
-		mockMvc.perform(multipart("/recipe/1/image").file(multipartFile ))
-				.andExpect(status().isFound())
-				.andExpect(header().string("Location", "/"));
+		Long id = 1L;
+		MockMultipartFile multipartFile = new MockMultipartFile("imagefile", "texting.txt", "text/plain",
+				"testFile2".getBytes());
+		Recipe recipe = new Recipe();
+		recipe.setId(id);
+
+		Optional<Recipe> optRec = Optional.of(recipe);
+
+		when(recipeRepository.findById(anyLong())).thenReturn(optRec);
+
+		ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
+
+		imageService.saveImageFile(id, multipartFile);
+
+		verify(recipeRepository).save(argumentCaptor.capture());
+		Recipe savedRecipe = argumentCaptor.getValue();
+		assertEquals(id, savedRecipe.getId());
+		assertEquals(multipartFile.getBytes().length, savedRecipe.getImage().length);
 	}
 
-*/}
+}
