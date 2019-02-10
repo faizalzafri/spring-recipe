@@ -6,6 +6,6 @@ import com.faizal.springrecipe.commands.UnitOfMeasureCommand;
 
 public interface UnitOfMeasureService {
 	
-	Set<UnitOfMeasureCommand> listAllUoms();
+	Set<UnitOfMeasureCommand> findAll();
 
 }

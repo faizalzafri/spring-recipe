@@ -53,7 +53,7 @@ public class IngredientControllerTest {
 	public void testListIngredient() throws Exception {
 		RecipeCommand recipeCommand = new RecipeCommand();
 
-		when(recipeService.getRecipeCommandById(anyLong())).thenReturn(recipeCommand);
+		when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
 
 		mockMvc.perform(get("/recipe/1/ingredients")).andExpect(status().isOk())
 				.andExpect(view().name("recipe/ingredient/list")).andExpect(model().attributeExists("recipe"));
@@ -64,7 +64,7 @@ public class IngredientControllerTest {
 
 		IngredientCommand ingredientCommand = new IngredientCommand();
 
-		when(ingredientService.getByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientCommand);
+		when(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientCommand);
 		mockMvc.perform(get("/recipe/1/ingredient/1/show")).andExpect(status().isOk())
 				.andExpect(view().name("recipe/ingredient/show")).andExpect(model().attributeExists("ingredient"));
 	}
@@ -76,7 +76,7 @@ public class IngredientControllerTest {
 		iCommand.setId(2L);
 		iCommand.setRecipeId(1L);
 
-		when(ingredientService.saveIngredientCommand(any())).thenReturn(iCommand);
+		when(ingredientService.save(any())).thenReturn(iCommand);
 
 		mockMvc.perform(post("/recipe/1/ingredient").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("id", "")
 				.param("description", "Some Description")).andExpect(status().is3xxRedirection())
@@ -86,9 +86,9 @@ public class IngredientControllerTest {
 	@Test
 	public void testUpdateRecipeIngredient() throws Exception {
 
-		when(ingredientService.getByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(new IngredientCommand());
+		when(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(new IngredientCommand());
 
-		when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+		when(unitOfMeasureService.findAll()).thenReturn(new HashSet<>());
 
 		mockMvc.perform(get("/recipe/1/ingredient/2/update")).andExpect(status().isOk())
 				.andExpect(view().name("recipe/ingredient/ingredientform"))
@@ -101,15 +101,15 @@ public class IngredientControllerTest {
 		RecipeCommand recipeCommand = new RecipeCommand();
 		recipeCommand.setId(1L);
 
-		when(recipeService.getRecipeCommandById(anyLong())).thenReturn(recipeCommand);
+		when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
 
-		when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+		when(unitOfMeasureService.findAll()).thenReturn(new HashSet<>());
 
 		mockMvc.perform(get("/recipe/1/ingredient/new")).andExpect(status().isOk())
 				.andExpect(view().name("recipe/ingredient/ingredientform"))
 				.andExpect(model().attributeExists("uomList")).andExpect(model().attributeExists("ingredient"));
 
-		verify(recipeService, times(1)).getRecipeCommandById(anyLong());
+		verify(recipeService, times(1)).findCommandById(anyLong());
 	}
 
 	@Test

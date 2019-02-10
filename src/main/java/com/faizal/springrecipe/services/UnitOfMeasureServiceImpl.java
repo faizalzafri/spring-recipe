@@ -24,9 +24,11 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
 	}
 
 	@Override
-	public Set<UnitOfMeasureCommand> listAllUoms() {
-		return StreamSupport.stream(uomRepository.findAll().spliterator(), false)
-				.map(unitOfMeasureToUnitOfMeasureCommand::convert).collect(Collectors.toSet());
+	public Set<UnitOfMeasureCommand> findAll() {
+		return StreamSupport.stream(uomRepository.findAll()
+									.spliterator(), false)
+									.map(unitOfMeasureToUnitOfMeasureCommand::convert)
+									.collect(Collectors.toSet());
 
 	}
 

@@ -45,7 +45,7 @@ public class ImageServiceImplTest {
 
 		ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
 
-		imageService.saveImageFile(id, multipartFile);
+		imageService.save(id, multipartFile);
 
 		verify(recipeRepository).save(argumentCaptor.capture());
 		Recipe savedRecipe = argumentCaptor.getValue();

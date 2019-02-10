@@ -4,9 +4,9 @@ import com.faizal.springrecipe.commands.IngredientCommand;
 
 public interface IngredientService {
 
-	IngredientCommand getByRecipeIdAndIngredientId(Long recipeId, Long id);
+	IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long id);
 
-	IngredientCommand saveIngredientCommand(IngredientCommand ingredientCommand);
+	IngredientCommand save(IngredientCommand ingredientCommand);
 
 	void deleteById(Long recipeId, Long id);
 }

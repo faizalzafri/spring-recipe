@@ -14,10 +14,7 @@ import com.faizal.springrecipe.domain.Recipe;
 import com.faizal.springrecipe.repositories.RecipeRepository;
 import com.faizal.springrecipe.repositories.UnitOfMeasureRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class IngredientServiceImpl implements IngredientService {
 
 	private final RecipeRepository recipeRepository;
@@ -35,7 +32,7 @@ public class IngredientServiceImpl implements IngredientService {
 	}
 
 	@Override
-	public IngredientCommand getByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
+	public IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
 
 		Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
@@ -45,8 +42,11 @@ public class IngredientServiceImpl implements IngredientService {
 
 		Recipe recipe = recipeOptional.get();
 
-		Optional<IngredientCommand> ingredientCommandOptional = recipe.getIngredients().stream()
-				.filter(ing -> ing.getId().equals(ingredientId)).map(irCommand::convert).findFirst();
+		Optional<IngredientCommand> ingredientCommandOptional = recipe.getIngredients()
+				.stream()
+				.filter(ing -> ing.getId().equals(ingredientId))
+				.map(irCommand::convert)
+				.findFirst();
 
 		if (!ingredientCommandOptional.isPresent()) {
 			throw new RuntimeException("Ingredient id not found: " + ingredientId);
@@ -57,7 +57,8 @@ public class IngredientServiceImpl implements IngredientService {
 
 	@Override
 	@Transactional
-	public IngredientCommand saveIngredientCommand(IngredientCommand ingredientCommand) {
+	public IngredientCommand save(IngredientCommand ingredientCommand) {
+		
 		Optional<Recipe> recipeOptional = recipeRepository.findById(ingredientCommand.getRecipeId());
 
 		if (!recipeOptional.isPresent()) {
