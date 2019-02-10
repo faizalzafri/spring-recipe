@@ -40,7 +40,7 @@ public class ImageControllerTest {
 		MockitoAnnotations.initMocks(this);
 		imageController = new ImageController(imageService, recipeService);
 		mockMvc = MockMvcBuilders.standaloneSetup(imageController)
-				.setControllerAdvice(new ContrrollerExceptionHandler())
+				.setControllerAdvice(new ControllerExceptionHandler())
 				.build();
 	}
 
@@ -50,11 +50,11 @@ public class ImageControllerTest {
 		RecipeCommand recipeCommand = new RecipeCommand();
 		recipeCommand.setId(1L);
 
-		when(recipeService.getRecipeCommandById(anyLong())).thenReturn(recipeCommand);
+		when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
 
 		mockMvc.perform(get("/recipe/1/image")).andExpect(status().isOk()).andExpect(model().attributeExists("recipe"));
 
-		verify(recipeService, times(1)).getRecipeCommandById(anyLong());
+		verify(recipeService, times(1)).findCommandById(anyLong());
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class ImageControllerTest {
 		mockMvc.perform(multipart("/recipe/1/image").file(multipartFile)).andExpect(status().is3xxRedirection())
 				.andExpect(header().string("Location", "/recipe/1/show"));
 
-		verify(imageService, times(1)).saveImageFile(anyLong(), any());
+		verify(imageService, times(1)).save(anyLong(), any());
 	}
 	
 	@Test

@@ -16,7 +16,6 @@ import com.faizal.springrecipe.exceptions.NotFoundException;
 import com.faizal.springrecipe.repositories.RecipeRepository;
 
 @Service
-
 public class RecipeServiceImpl implements RecipeService {
 
 	private final RecipeRepository recipeRepository;
@@ -31,34 +30,36 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public Set<Recipe> getRecipes() {
-
+	public Set<Recipe> findAll() {
 		Set<Recipe> recipeSet = new HashSet<>();
-		recipeRepository.findAll().iterator().forEachRemaining(recipeSet::add);
+		recipeRepository.findAll()
+						.iterator()
+						.forEachRemaining(recipeSet::add);
 		return recipeSet;
 	}
 
 	@Override
-	public Recipe getRecipeById(Long id) {
-
-		Optional<Recipe> optRec = recipeRepository.findById(id);
-		if (optRec.isPresent())
-			return optRec.get();
+	public Recipe findById(Long id) {
+		Optional<Recipe> optionalRecipe = recipeRepository.findById(id);
+		if (optionalRecipe.isPresent())
+			return optionalRecipe.get();
 		else
 			throw new NotFoundException("Recipe Not Found. For id value :" + id);
 	}
 
 	@Override
 	@Transactional
-	public RecipeCommand saveRecipeCommand(RecipeCommand command) {
-		Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
-		Recipe savedRecipe = recipeRepository.save(detachedRecipe);
-		return recipeToRecipeCommand.convert(savedRecipe);
+	public RecipeCommand save(RecipeCommand command) {
+		return recipeToRecipeCommand.convert(
+				recipeRepository.save(
+						recipeCommandToRecipe.convert(command)
+						)
+				);
 	}
 
 	@Override
-	public RecipeCommand getRecipeCommandById(Long id) {
-		return recipeToRecipeCommand.convert(getRecipeById(id));
+	public RecipeCommand findCommandById(Long id) {
+		return recipeToRecipeCommand.convert(this.findById(id));
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class UnitOfMeasureImplTest {
 	}
 
 	@Test
-	public void testListAllUoms() {
+	public void testFindAll() {
 
 		Set<UnitOfMeasure> setUom = new HashSet<>();
 		UnitOfMeasure uom1 = new UnitOfMeasure();
@@ -47,7 +47,7 @@ public class UnitOfMeasureImplTest {
 
 		when(unitOfMeasureRepository.findAll()).thenReturn(setUom);
 
-		assertEquals(2, unitOfMeasureService.listAllUoms().size());
+		assertEquals(2, unitOfMeasureService.findAll().size());
 		verify(unitOfMeasureRepository, times(1)).findAll();
 
 	}

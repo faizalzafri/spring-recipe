@@ -65,13 +65,13 @@ public class IndexControllerTest {
 		// Creating a Set of Recipe to be returned by call to the controller - END
 
 		// set previously created Set to be returned
-		when(recipeService.getRecipes()).thenReturn(recipeSet);
+		when(recipeService.findAll()).thenReturn(recipeSet);
 
 		// when
 		String viewName = controller.getIndexPage(model);
 		// then - START
 		assertEquals("index", viewName);
-		verify(recipeService, times(1)).getRecipes();
+		verify(recipeService, times(1)).findAll();
 		verify(model, times(1)).addAttribute("recipes", recipeSet);
 		// then - END
 
